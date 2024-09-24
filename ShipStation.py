@@ -40,7 +40,10 @@ class ShipStation:
                     print("http 500")  # Don't actually remember what that means lol
                     sleep(5)
 
-        return json.loads(r.text)
+        if r.text:
+            return json.dumps(r.text)
+        else:
+            return "No body"
 
     def list_tags(self):
         url = "/accounts/listtags"
@@ -59,5 +62,21 @@ class ShipStation:
         url = "/orders?pageSize=500"
         content = self._request_handler("get", url)
 
+        orders = []
         for order in content["orders"]:
-            pass
+            self._add_order(order, orders)
+
+        pages = int(content["pages"])
+        if pages > 1:
+            for i in range(2, pages + 1):
+                n_url = url
+                n_url += f"&page={i}"
+                content = self._request_handler("get", n_url)
+
+                for order in content["orders"]:
+                    self._add_order(order, orders)
+
+    def _add_order(self, order, list_orders: list):
+        o = Order()
+        o.update(order)
+        list_orders.append(o)

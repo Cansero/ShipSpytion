@@ -58,6 +58,7 @@ class ShipStation:
 
         return r_tags
 
+    # NOTE: Could be optimized
     def get_orders(self):
         url = "/orders?pageSize=500"
         content = self._request_handler("get", url)
@@ -75,6 +76,11 @@ class ShipStation:
 
                 for order in content["orders"]:
                     self._add_order(order, orders)
+
+    def add_tag(self, order, tag: Tag):
+        if not isinstance(order, Order) and not isinstance(tag, Tag):
+            return
+        # TODO: Continue
 
     def _add_order(self, order, list_orders: list):
         o = Order()

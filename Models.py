@@ -30,7 +30,6 @@ class Limits:
 
 class Order:
     def __init__(self,
-                 ref,
                  orderId="",
                  orderNumber="",
                  orderKey="",
@@ -111,8 +110,14 @@ class Order:
         self.externallyFulfilled = externallyFulfilled
         self.externallyFulfilledBy = externallyFulfilledBy
 
-        if ref:
-            keys = vars(self).keys()
-            for k, v in ref.items():
-                if k in keys:
-                    setattr(self, k, v)
+    def update(self, ref):
+        if not isinstance(ref, dict):
+            return
+
+        keys = vars(self).keys()
+        for k, v in ref.items():
+            if k in keys:
+                setattr(self, k, v)
+
+    def as_dic(self):
+        return vars(self)

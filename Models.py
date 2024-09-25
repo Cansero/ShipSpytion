@@ -1,16 +1,19 @@
 class Tag:
-    def __init__(self, tagid=None, name=None, color=None):
-        self.tagid = tagid
+    def __init__(self, tagId=None, name=None, color=None):
+        self.tagId = tagId
         self.name = name
         self.color = color
 
-    def update(self, ref):
+    def utagpdate(self, ref):
         if not isinstance(ref, dict):
             return
 
-        self.tagid = ref['tagId']
+        self.tagId = ref['tagId']
         self.name = ref['name']
         self.color = ref['color']
+
+    def as_dict(self):
+        return vars(self)
 
 
 class Limits:
@@ -119,5 +122,5 @@ class Order:
             if k in keys:
                 setattr(self, k, v)
 
-    def as_dic(self):
+    def as_dict(self):
         return vars(self)

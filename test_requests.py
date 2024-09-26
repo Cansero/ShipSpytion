@@ -1,7 +1,7 @@
 from ShipStation import ShipStation
 from Token import token
 
-ss = ShipStation(token=token, debug=False)
+ss = ShipStation(token=token, debug=True)
 tags = ss.list_tags()
 
 for tag in tags:

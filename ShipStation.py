@@ -6,7 +6,7 @@ from Models import Limits, Tag, Order
 
 
 class ShipStation:
-    def __init__(self, token=None, debug=False):
+    def __init__(self, token="", debug=False):
         self.debug = debug
 
         self.url = "https://ssapi.shipstation.com"
@@ -107,7 +107,7 @@ class ShipStation:
             self._add_order(order, orders)
         return orders
 
-    def add_tag(self, order: Order, tag: Tag) -> dict:
+    def add_tag(self, order: Order, tag: Tag) -> bool:
         if not isinstance(order, Order) and not isinstance(tag, Tag):
             return
 

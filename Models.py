@@ -60,7 +60,7 @@ class Order(BaseModel):
             customerEmail="",
             billTo=Address(),
             shipTo=Address(),
-            items=None,
+            items=None,  # FIX: List
             orderTotal=0,
             amountPaid=0,
             taxAmount=0,
@@ -163,7 +163,7 @@ class OrderItem(BaseModel):
             taxAmount=0,
             shippingAmount=0,
             warehouseLocation="",
-            options=None,
+            options=None,  # FIX: List of ItemOption
             productId=0,
             fulfillmentSku="",
             adjustment=False,

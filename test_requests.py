@@ -1,15 +1,8 @@
 from ShipStation import ShipStation
 from Token import token
 
-ss = ShipStation(token=token, debug=True)
-tags = ss.list_tags()
+ss = ShipStation(token=token, debug=False)
+order = ss._get_n_order(1)[0]
 
-for tag in tags:
-    if tag.name == "SHIPPED ORDER":
-        break
-
-orders = ss._get_n_order(2)
-
-for order in orders:
-    print(order.orderNumber)
-    print(order.shipByDate)
+print(order.as_dict())
+print(type(order.billTo))

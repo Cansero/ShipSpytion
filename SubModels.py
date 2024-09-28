@@ -1,15 +1,21 @@
 class BaseModel:
-    def update(self, ref):
+    def update(self, ref: dict):
         if not isinstance(ref, dict):
             return
-
-        keys = vars(self).keys()
         for k, v in ref.items():
-            if k in keys:
+            if isinstance(v, dict):
+                obj = getattr(self, k)
+                obj.update(v)
+            else:
                 setattr(self, k, v)
 
     def as_dict(self):
-        return vars(self)
+        variables = vars(self)
+        to_return = variables.copy()
+        for k, v in variables.items():
+            if isinstance(v, BaseModel):
+                to_return[k] = v.as_dict()
+        return to_return
 
 
 class Address(BaseModel):
@@ -55,7 +61,7 @@ class AdvancedOptions(BaseModel):
             customField3="",
             source="",
             mergedOrSplit=False,
-            mergedIds=None,
+            mergedIds=None,  # FIX: List of Ints
             parentId=0,
             billToParty="",
             billToAccount="",

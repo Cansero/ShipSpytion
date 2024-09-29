@@ -1,3 +1,6 @@
+MAY_BE_LIST = ['options', 'items', 'mergedIds']
+
+
 class BaseModel:
     def update(self, ref: dict):
         if not isinstance(ref, dict):
@@ -6,6 +9,21 @@ class BaseModel:
             if isinstance(v, dict):
                 obj = getattr(self, k)
                 obj.update(v)
+            elif isinstance(v, list):
+                if k in MAY_BE_LIST:
+                    obj = None
+                    match k:
+                        case "options":
+                            obj = ItemOption()
+                        case "items":
+                            obj = OrderItem()
+                    if len(v) > 0:
+                        for item in v:
+                            pass
+                    else:
+                        setattr(self, k, v)
+                else:
+                    print("idk what this is")
             else:
                 setattr(self, k, v)
 
@@ -130,6 +148,70 @@ class InsuranceOptions(BaseModel):
         self.provider = provider
         self.insureShipment = insureShipment
         self.insuredValue = insuredValue
+
+
+class InternationalOptions(BaseModel):
+    def __init__(
+            self,
+            contents="",
+            customsItems=CustomsItems(),
+            nonDelivery=""
+            ):
+        self.contents = contents
+        self.customsItems = customsItems
+        self.nonDelivery = nonDelivery
+
+
+class ItemOption(BaseModel):
+    def __init__(
+            self,
+            name="",
+            value=""
+            ):
+        self.name = name
+        self.value = value
+
+
+class OrderItem(BaseModel):
+    def __init__(
+            self,
+            orderItemId=0,
+            lineItemKey="",
+            sku="",
+            name="",
+            imageUrl="",
+            weight=Weight(),
+            quantity=0,
+            unitPrice=0,
+            taxAmount=0,
+            shippingAmount=0,
+            warehouseLocation="",
+            options=None,  # FIX: List of ItemOption
+            productId=0,
+            fulfillmentSku="",
+            adjustment=False,
+            upc="",
+            createDate="",
+            modifyDate=""
+            ):
+        self.orderItemId = orderItemId
+        self.lineItemKey = lineItemKey
+        self.sku = sku
+        self.name = name
+        self.imageUrl = imageUrl
+        self.weight = weight
+        self.quantity = quantity
+        self.unitPrice = unitPrice
+        self.taxAmount = taxAmount
+        self.shippingAmount = shippingAmount
+        self.warehouseLocation = warehouseLocation
+        self.options = [] if options is None else options
+        self.productId = productId
+        self.fulfillmentSku = fulfillmentSku
+        self.adjustment = adjustment
+        self.upc = upc
+        self.createDate = createDate
+        self.modifyDate = modifyDate
 
 
 class ProductCategory(BaseModel):

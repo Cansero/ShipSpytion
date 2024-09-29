@@ -5,6 +5,8 @@ from SubModels import (
         CustomsItems,
         Dimensions,
         InsuranceOptions,
+        InternationalOptions,
+        ItemOption,
         ProductCategory,
         ProductTag,
         ProductType,
@@ -80,6 +82,7 @@ class Order(BaseModel):
             weight=Weight(),
             dimensions=Dimensions(),
             insuranceOptions=InsuranceOptions(),
+            internationalOptions=InternationalOptions(),
             advancedOptions=AdvancedOptions(),
             tagIds=None,
             userId="",
@@ -120,75 +123,12 @@ class Order(BaseModel):
         self.weight = weight
         self.dimensions = dimensions
         self.insuranceOptions = insuranceOptions
+        self.internationalOptions = internationalOptions
         self.advancedOptions = advancedOptions
         self.tagIds = tagIds
         self.userId = userId
         self.externallyFulfilled = externallyFulfilled
         self.externallyFulfilledBy = externallyFulfilledBy
-
-
-class InternationalOptions(BaseModel):
-    def __init__(
-            self,
-            contents="",
-            customsItems=CustomsItems(),
-            nonDelivery=""
-            ):
-        self.contents = contents
-        self.customsItems = customsItems
-        self.nonDelivery = nonDelivery
-
-
-class ItemOption(BaseModel):
-    def __init__(
-            self,
-            name="",
-            value=""
-            ):
-        self.name = name
-        self.value = value
-
-
-class OrderItem(BaseModel):
-    def __init__(
-            self,
-            orderItemId=0,
-            lineItemKey="",
-            sku="",
-            name="",
-            imageUrl="",
-            weight=Weight(),
-            quantity=0,
-            unitPrice=0,
-            taxAmount=0,
-            shippingAmount=0,
-            warehouseLocation="",
-            options=None,  # FIX: List of ItemOption
-            productId=0,
-            fulfillmentSku="",
-            adjustment=False,
-            upc="",
-            createDate="",
-            modifyDate=""
-            ):
-        self.orderItemId = orderItemId
-        self.lineItemKey = lineItemKey
-        self.sku = sku
-        self.name = name
-        self.imageUrl = imageUrl
-        self.weight = weight
-        self.quantity = quantity
-        self.unitPrice = unitPrice
-        self.taxAmount = taxAmount
-        self.shippingAmount = shippingAmount
-        self.warehouseLocation = warehouseLocation
-        self.options = [] if options is None else options
-        self.productId = productId
-        self.fulfillmentSku = fulfillmentSku
-        self.adjustment = adjustment
-        self.upc = upc
-        self.createDate = createDate
-        self.modifyDate = modifyDate
 
 
 class Product(BaseModel):

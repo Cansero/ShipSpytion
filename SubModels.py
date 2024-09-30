@@ -1,4 +1,4 @@
-MAY_BE_LIST = ['options', 'items', 'mergedIds']
+from copy import deepcopy
 
 
 class BaseModel:
@@ -10,20 +10,21 @@ class BaseModel:
                 obj = getattr(self, k)
                 obj.update(v)
             elif isinstance(v, list):
-                if k in MAY_BE_LIST:
-                    obj = None
-                    match k:
-                        case "options":
-                            obj = ItemOption()
-                        case "items":
-                            obj = OrderItem()
-                    if len(v) > 0:
-                        for item in v:
-                            pass  # WARNING: Continue
-                    else:
-                        setattr(self, k, v)
+                to_set = []
+                exa = getattr(self, k)[0]
+                if isinstance(exa, int):
+                    for num in v:
+                        to_set.append(num)
                 else:
-                    print("idk what this is")
+                    for item in v:
+                        obj = deepcopy(exa)
+                        obj.__init__()
+                        if not isinstance(item, dict):
+                            print("Wrong format")
+                            return
+                        obj.update(item)
+                        to_set.append(obj)
+                setattr(self, k, to_set)
             else:
                 setattr(self, k, v)
 
@@ -33,6 +34,11 @@ class BaseModel:
         for k, v in variables.items():
             if isinstance(v, BaseModel):
                 to_return[k] = v.as_dict()
+            if isinstance(v, list):
+                ls = []
+                for item in v:
+                    ls.append(item.as_dict())
+                to_return[k] = ls
         return to_return
 
 
@@ -91,7 +97,7 @@ class AdvancedOptions(BaseModel):
             customField3="",
             source="",
             mergedOrSplit=False,
-            mergedIds=None,  # FIX: List of Ints
+            mergedIds=None,  # List of Ints
             parentId=0,
             billToParty="",
             billToAccount="",
@@ -198,7 +204,7 @@ class OrderItem(BaseModel):
             taxAmount=0,
             shippingAmount=0,
             warehouseLocation="",
-            options=None,
+            options=None,  # List of ItemOption
             productId=0,
             fulfillmentSku="",
             adjustment=False,

@@ -7,6 +7,7 @@ from SubModels import (
         InsuranceOptions,
         InternationalOptions,
         ItemOption,
+        OrderItem,
         ProductCategory,
         ProductTag,
         ProductType,
@@ -62,7 +63,7 @@ class Order(BaseModel):
             customerEmail="",
             billTo=Address(),
             shipTo=Address(),
-            items=None,  # FIX: List
+            items=None,  # List if OrderItem
             orderTotal=0,
             amountPaid=0,
             taxAmount=0,
@@ -103,7 +104,7 @@ class Order(BaseModel):
         self.customerEmail = customerEmail
         self.billTo = billTo
         self.shipTo = shipTo
-        self.items = [] if items is None else items
+        self.items = [OrderItem] if items is None else items
         self.orderTotal = orderTotal
         self.amountPaid = amountPaid
         self.taxAmount = taxAmount

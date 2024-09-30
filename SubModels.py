@@ -19,7 +19,7 @@ class BaseModel:
                             obj = OrderItem()
                     if len(v) > 0:
                         for item in v:
-                            pass
+                            pass  # WARNING: Continue
                     else:
                         setattr(self, k, v)
                 else:
@@ -34,6 +34,18 @@ class BaseModel:
             if isinstance(v, BaseModel):
                 to_return[k] = v.as_dict()
         return to_return
+
+
+class Weight(BaseModel):
+    def __init__(
+            self,
+            value=0,
+            units="",
+            WeightUnits=0
+            ):
+        self.value = value
+        self.units = units
+        self.WeightUnits = WeightUnits
 
 
 class Address(BaseModel):
@@ -97,7 +109,7 @@ class AdvancedOptions(BaseModel):
         self.customField3 = customField3
         self.source = source
         self.mergedOrSplit = mergedOrSplit
-        self.mergedIds = [] if mergedIds is None else mergedIds
+        self.mergedIds = [0] if mergedIds is None else mergedIds
         self.parentId = parentId
         self.billToParty = billToParty
         self.billToAccount = billToAccount
@@ -186,7 +198,7 @@ class OrderItem(BaseModel):
             taxAmount=0,
             shippingAmount=0,
             warehouseLocation="",
-            options=None,  # FIX: List of ItemOption
+            options=None,
             productId=0,
             fulfillmentSku="",
             adjustment=False,
@@ -205,7 +217,7 @@ class OrderItem(BaseModel):
         self.taxAmount = taxAmount
         self.shippingAmount = shippingAmount
         self.warehouseLocation = warehouseLocation
-        self.options = [] if options is None else options
+        self.options = [ItemOption()] if options is None else options
         self.productId = productId
         self.fulfillmentSku = fulfillmentSku
         self.adjustment = adjustment
@@ -272,15 +284,3 @@ class ProductType(BaseModel):
         self.customsTariffNo = customsTariffNo
         self.customsCountryCode = customsCountryCode
         self.noCustoms = noCustoms
-
-
-class Weight(BaseModel):
-    def __init__(
-            self,
-            value=0,
-            units="",
-            WeightUnits=0
-            ):
-        self.value = value
-        self.units = units
-        self.WeightUnits = WeightUnits

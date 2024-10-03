@@ -1,45 +1,4 @@
-from copy import deepcopy
-
-
-class BaseModel:
-    def update(self, ref: dict):
-        if not isinstance(ref, dict):
-            return
-        for k, v in ref.items():
-            if isinstance(v, dict):
-                obj = getattr(self, k)
-                obj.update(v)
-            elif isinstance(v, list):
-                to_set = []
-                exa = getattr(self, k)[0]
-                if isinstance(exa, int):
-                    for num in v:
-                        to_set.append(num)
-                else:
-                    for item in v:
-                        obj = deepcopy(exa)
-                        obj.__init__()
-                        if not isinstance(item, dict):
-                            print("Wrong format")
-                            return
-                        obj.update(item)
-                        to_set.append(obj)
-                setattr(self, k, to_set)
-            else:
-                setattr(self, k, v)
-
-    def as_dict(self):
-        variables = vars(self)
-        to_return = variables.copy()
-        for k, v in variables.items():
-            if isinstance(v, BaseModel):
-                to_return[k] = v.as_dict()
-            if isinstance(v, list):
-                ls = []
-                for item in v:
-                    ls.append(item.as_dict())
-                to_return[k] = ls
-        return to_return
+from BaseModel import BaseModel
 
 
 class Weight(BaseModel):
@@ -172,11 +131,11 @@ class InternationalOptions(BaseModel):
     def __init__(
             self,
             contents="",
-            customsItems=CustomsItems(),
+            customsItems=None,  # List of CustomsItems
             nonDelivery=""
             ):
         self.contents = contents
-        self.customsItems = customsItems
+        self.customsItems = [CustomsItems()] if customsItems is None else customsItems
         self.nonDelivery = nonDelivery
 
 

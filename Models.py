@@ -1,12 +1,10 @@
+from BaseModel import BaseModel
 from SubModels import (
-        BaseModel,
         Address,
         AdvancedOptions,
-        CustomsItems,
         Dimensions,
         InsuranceOptions,
         InternationalOptions,
-        ItemOption,
         OrderItem,
         ProductCategory,
         ProductTag,
@@ -104,7 +102,7 @@ class Order(BaseModel):
         self.customerEmail = customerEmail
         self.billTo = billTo
         self.shipTo = shipTo
-        self.items = [OrderItem] if items is None else items
+        self.items = [OrderItem()] if items is None else items
         self.orderTotal = orderTotal
         self.amountPaid = amountPaid
         self.taxAmount = taxAmount

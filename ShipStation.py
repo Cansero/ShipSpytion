@@ -18,6 +18,7 @@ class ShipStation:
                          request_type: str,
                          url: str,
                          data: dict = None) -> dict | str:
+        # WARNING: No Toekn handling
         url = self.url + url
 
         if self.debug:

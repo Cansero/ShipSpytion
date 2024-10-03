@@ -1,6 +1,15 @@
 from copy import deepcopy
 
 
+def is_obj_list(self, ls: list) -> bool:
+    if not isinstance(ls, list):
+        return False
+    for item in ls:
+        if not isinstance(item, BaseModel):
+            return False
+    return True
+
+
 class BaseModel:
     def update(self, ref: dict):  # NOTE: Could be optimized
         if not isinstance(ref, dict):
@@ -34,7 +43,7 @@ class BaseModel:
         for k, v in variables.items():
             if isinstance(v, BaseModel):
                 to_return[k] = v.as_dict()
-            if isinstance(v, list):
+            if is_obj_list(v):
                 ls = []
                 for item in v:
                     ls.append(item.as_dict())

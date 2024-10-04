@@ -1,7 +1,7 @@
 from copy import deepcopy
 
 
-def is_obj_list(self, ls: list) -> bool:
+def is_obj_list(ls: list) -> bool:
     if not isinstance(ls, list):
         return False
     for item in ls:

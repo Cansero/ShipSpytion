@@ -5,6 +5,15 @@ from time import sleep
 from Models import Limits, Tag, Order
 
 
+ORDER_STATUS = [
+        "awaiting_payment",
+        "awaiting_shipment",
+        "shipped",
+        "on_hold",
+        "cancelled"
+        ]
+
+
 class ShipStation:
     def __init__(self, token="", debug=False):
         self.debug = debug
@@ -32,8 +41,7 @@ class ShipStation:
         while not done:
 
             # WARNING: Handle remianing uses before the requests
-
-            r = request(request_type, url, headers=headers, data=data)
+            r = request(request_type, url, headers=headers, data=json.dumps(data))
 
             self.limits.update(r.headers)
 
@@ -97,6 +105,17 @@ class ShipStation:
                     self._add_order(order, orders)
 
         return orders
+
+    def list_by_tags(self, orderStatus, tag: Tag, page=1, pageSize=1):
+        if orderStatus not in ORDER_STATUS:
+            return
+        if not isinstance(tag, Tag):
+            return
+
+        url = f"/listbytag?orderStatus={orderStatus}&tagId={tag.tagId}&page={page}&pageSize={pageSize}"
+        content = self._request_handler("get", url)
+
+        return content["orders"]
 
     def _get_n_order(self, amount) -> list[Order]:
         if amount < 1 or amount > 500:

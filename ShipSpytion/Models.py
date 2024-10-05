@@ -1,5 +1,5 @@
-from BaseModel import BaseModel
-from SubModels import (
+from .BaseModel import BaseModel
+from .SubModels import (
         Address,
         AdvancedOptions,
         Dimensions,

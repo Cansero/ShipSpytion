@@ -3,11 +3,11 @@
 - [ ] Register Account
 - [x] List Account Tags
 ### Carriers
-- [ ] Add Funds to Carrier
-- [ ] Get Carrier Info
-- [ ] List Carriers
-- [ ] List Packages
-- [ ] List Services
+- [x] Add Funds to Carrier
+- [x] Get Carrier Info
+- [x] List Carriers
+- [x] List Packages
+- [x] List Services
 ### Customers
 - [ ] Get Customer Info
 - [ ] List Customers

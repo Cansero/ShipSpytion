@@ -2,7 +2,8 @@ import json
 from requests import request
 from time import sleep
 
-from Models import Limits, Tag, Order
+from .Models import Limits, Tag, Order
+from .AdditionalModels import Carrier, Package, Service
 
 
 ORDER_STATUS = [
@@ -15,7 +16,7 @@ ORDER_STATUS = [
 
 
 class ShipStation:
-    def __init__(self, token="", debug=False):
+    def __init__(self, token, debug=False):
         self.debug = debug
 
         self.url = "https://ssapi.shipstation.com"
@@ -41,7 +42,8 @@ class ShipStation:
         while not done:
 
             # WARNING: Handle remianing uses before the requests
-            r = request(request_type, url, headers=headers, data=json.dumps(data))
+            data = json.dumps(data)
+            r = request(request_type, url, headers=headers, data=data)
 
             self.limits.update(r.headers)
 
@@ -69,7 +71,73 @@ class ShipStation:
         else:
             return "No body"
 
-    def list_tags(self) -> list[Tag]:
+    # NOTE: Not tried
+    def add_funds_to_carrier(self, carrier: Carrier, amount: int):
+        if not isinstance(carrier, Carrier):
+            return
+        if not isinstance(amount, int):
+            return
+
+        url = "/carriers/addfunds"
+        data = {"carrierCode": carrier.code, "amount": amount}
+        response = self._request_handler("post", url, data)
+
+        carrier.update(response)
+
+        return
+
+    def get_carrier_info(self, code: str) -> Carrier:
+        url = f"/carriers/getcarrier?carrierCode={code}"
+        carrier = self._request_handler("get", url)
+
+        c = Carrier()
+        c.update(carrier)
+
+        return c
+
+    def list_carriers(self) -> list[Carrier]:
+        url = "/carriers"
+        carriers = self._request_handler("get", url)
+
+        r_carriers = []
+        for carrier in carriers:
+            c = Carrier()
+            c.update(carrier)
+            r_carriers.append(c)
+
+        return r_carriers
+
+    def list_packages(self, carrier: Carrier) -> list[Package]:
+        if not isinstance(carrier, Carrier):
+            return
+
+        url = f"/carriers/listpackages?carrierCode={carrier.code}"
+        packages = self._request_handler("get", url)
+
+        r_packages = []
+        for package in packages:
+            p = Package()
+            p.update(package)
+            r_packages.apend(p)
+
+        return r_packages
+
+    def list_services(self, carrier: Carrier) -> list[Service]:
+        if not isinstance(carrier, Carrier):
+            return
+
+        url = f"/carriers/listservices?carrierCode={carrier.code}"
+        services = self._request_handler("get", url)
+
+        r_services = []
+        for service in services:
+            s = Service()
+            s.update(service)
+            r_services.append(s)
+
+        return r_services
+
+    def list_account_tags(self) -> list[Tag]:
         url = "/accounts/listtags"
         tags = self._request_handler("get", url)
 
@@ -85,8 +153,17 @@ class ShipStation:
 
         return r_tags
 
+    def assign_user(self, orders, user):
+        # WARNING: Add User Class for this function
+        pass
+
+    def create_label_for_order(self, order):
+        if not isinstance(order, Order):
+            return
+        pass
+
     # NOTE: Could be optimized
-    def get_orders(self) -> list[Order]:
+    def get_all_orders(self) -> list[Order]:
         url = "/orders?pageSize=500"
         content = self._request_handler("get", url)
 

@@ -1,6 +1,7 @@
 import json
 from requests import request
 from time import sleep
+from datetime import datetime
 
 from .Exceptions import NotImplementedError
 
@@ -14,6 +15,14 @@ ORDER_STATUS = [
         "shipped",
         "on_hold",
         "cancelled"
+        ]
+
+CONFIRMATION = [
+        "none",
+        "delivery",
+        "signature",
+        "adult_signature",
+        "direct_signature"
         ]
 
 
@@ -173,10 +182,38 @@ class ShipStation:
         # WARNING: Add User Class for this function
         pass
 
-    def create_label_for_order(self, order):
+    def create_label_for_order(
+            self,
+            order: Order,
+            carrier: Carrier,
+            service: Service,
+            confirmation,
+            shipDate="",
+            testLabel=False
+            ):
         if not isinstance(order, Order):
             return
-        pass
+        if not isinstance(carrier, Carrier):
+            return
+        if not isinstance(service, Service):
+            return
+        if confirmation not in CONFIRMATION:
+            return
+
+        shipDate = datetime.today().strftime('%Y-%m-%d') if shipDate == "" else shipDate
+        data = {
+                "orderId": order.orderId,
+                "carrierCode": carrier.code,
+                "serviceCode": service.code,
+                "confirmation": confirmation,
+                "shipDate": shipDate,
+                "weight": order.weight.as_dict(),
+                "dimensions": order.dimensions.as_dict(),
+                "insuranceOptions": order.insuranceOptions.as_dict(),
+                "internationalOptions": "",
+                "advancedOptions": "",
+                "testLabel": testLabel
+                }
 
     # NOTE: Could be optimized
     def get_all_orders(self) -> list[Order]:

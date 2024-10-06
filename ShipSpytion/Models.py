@@ -61,7 +61,7 @@ class Order(BaseModel):
             customerEmail="",
             billTo=Address(),
             shipTo=Address(),
-            items=None,  # List if OrderItem
+            items=None,  # List of OrderItem
             orderTotal=0,
             amountPaid=0,
             taxAmount=0,

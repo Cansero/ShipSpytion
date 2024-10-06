@@ -61,3 +61,21 @@ class Service(BaseModel):
         self.name = name
         self.domestic = domestic
         self.international = international
+
+
+class Shipment(BaseModel):
+    def __init__(
+            self,
+            shipmentId=0,
+            shipmentCost=0,
+            insuranceCost=0,
+            trackingNumber="",
+            labelData="",
+            formData=None
+            ):
+        self.shipmentId = shipmentId
+        self.shipmentCost = shipmentCost
+        self.insuranceCost = insuranceCost
+        self.trackingNumber = trackingNumber
+        self.labelData = labelData
+        self.formData = formData

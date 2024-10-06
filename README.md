@@ -16,7 +16,7 @@
 ### Orders
 - [x] Add Tag
 - [ ] Assign User
-- [ ] Create Label for Order
+- [x] Create Label for Order
 - [ ] Create/Update Multiple Orders
 - [ ] Create/Update Order
 - [ ] Delete Order

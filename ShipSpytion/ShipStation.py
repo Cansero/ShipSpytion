@@ -6,7 +6,7 @@ from datetime import datetime
 from .Exceptions import NotImplementedError
 
 from .Models import Limits, Tag, Order
-from .AdditionalModels import Carrier, Package, Service
+from .AdditionalModels import Carrier, Package, Service, Shipment
 
 
 ORDER_STATUS = [
@@ -200,6 +200,7 @@ class ShipStation:
         if confirmation not in CONFIRMATION:
             return
 
+        url = "/orders/createlabelfororder"
         shipDate = datetime.today().strftime('%Y-%m-%d') if shipDate == "" else shipDate
         data = {
                 "orderId": order.orderId,
@@ -210,10 +211,16 @@ class ShipStation:
                 "weight": order.weight.as_dict(),
                 "dimensions": order.dimensions.as_dict(),
                 "insuranceOptions": order.insuranceOptions.as_dict(),
-                "internationalOptions": "",
-                "advancedOptions": "",
+                "internationalOptions": order.internationalOptions.as_dict(),
+                "advancedOptions": order.advancedOptions.as_dict(),
                 "testLabel": testLabel
                 }
+        shipment = self._request_handler("post", url, data)
+
+        s = Shipment()
+        s.update(shipment)
+
+        return s
 
     # NOTE: Could be optimized
     def get_all_orders(self) -> list[Order]:

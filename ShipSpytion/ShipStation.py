@@ -2,6 +2,8 @@ import json
 from requests import request
 from time import sleep
 
+from .Exceptions import NotImplementedError
+
 from .Models import Limits, Tag, Order
 from .AdditionalModels import Carrier, Package, Service
 
@@ -136,6 +138,20 @@ class ShipStation:
             r_services.append(s)
 
         return r_services
+
+    # FIX: Poorly implemented
+    def get_customer_info(self, customerId):
+        url = f"/customers/{customerId}"
+        customer = self._request_handler("get", url)
+
+        return customer
+
+    # FIX: Not implemented
+    def list_customers(self):
+        raise NotImplementedError("list_customers not implemented yet")
+
+    def list_fulfillments(self):
+        raise NotImplementedError("list_fulfillments not implemented yet")
 
     def list_account_tags(self) -> list[Tag]:
         url = "/accounts/listtags"

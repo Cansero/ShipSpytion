@@ -22,7 +22,7 @@
 - [ ] Delete Order
 - [ ] Hold Order
 - [x] List By Tag
-- [ ] List
+- [x] List Orders
 - [ ] Mark Shipped
 - [ ] Remove Tag
 - [ ] Restore From Hold

@@ -35,6 +35,8 @@ class BaseModel:
                         to_set.append(obj)
                 setattr(self, attr, to_set)
             else:
+                if attr not in vars(self):
+                    continue
                 setattr(self, attr, value)
 
     def as_dict(self):

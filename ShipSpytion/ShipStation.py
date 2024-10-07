@@ -6,15 +6,17 @@ from datetime import datetime
 from .Exceptions import NotImplementedError
 
 from .Models import Limits, Tag, Order
-from .AdditionalModels import Carrier, Package, Service, Shipment
+from .AdditionalModels import Carrier, Package, Service, Shipment, ListOrdersOptions
 
 
 ORDER_STATUS = [
         "awaiting_payment",
         "awaiting_shipment",
+        "pending_fulfillment",
         "shipped",
         "on_hold",
-        "cancelled"
+        "cancelled",
+        "rejected_fulfillment"
         ]
 
 CONFIRMATION = [
@@ -222,28 +224,48 @@ class ShipStation:
 
         return s
 
+    def update_order(self, order):
+        pass
+
     # NOTE: Could be optimized
-    def get_all_orders(self) -> list[Order]:
-        url = "/orders?pageSize=500"
+    def list_orders(
+            self,
+            options: ListOrdersOptions | dict = None,
+            all=False
+            ) -> list[Order]:
+        if isinstance(options, ListOrdersOptions):
+            options = options.as_dict()
+
+        if options is None:
+            url = "/orders?pageSize=500"
+        else:
+            url = "/orders?"
+            url += self._make_url(options)
+
         content = self._request_handler("get", url)
 
         orders = []
         for order in content["orders"]:
             self._add_order(order, orders)
 
-        pages = int(content["pages"])
-        if pages > 1:
-            for i in range(2, pages + 1):
-                n_url = url
-                n_url += f"&page={i}"
-                content = self._request_handler("get", n_url)
+        if all:
+            pages = int(content["pages"])
+            next_page = int(content["page"]) + 1
+            next_page = next_page if next_page <= pages else None
 
-                for order in content["orders"]:
-                    self._add_order(order, orders)
+            if pages > 1 and next_page is not None:
+                for i in range(next_page, pages + 1):
+                    n_url = url
+                    n_url = self._update_url(n_url, "page", str(i))
+                    content = self._request_handler("get", n_url)
+
+                    for order in content["orders"]:
+                        self._add_order(order, orders)
 
         return orders
 
-    def list_by_tags(self, orderStatus, tag: Tag, page=1, pageSize=1):
+    # FIX: Poorly Implemented
+    def list_by_tag(self, orderStatus, tag: Tag, page=1, pageSize=1):
         if orderStatus not in ORDER_STATUS:
             return
         if not isinstance(tag, Tag):
@@ -278,3 +300,23 @@ class ShipStation:
         o = Order()
         o.update(order)
         list_orders.append(o)
+
+    def _make_url(self, options: dict) -> str:
+        url = ""
+        for k, v in options.items():
+            if v:
+                url += k + "=" + k + "&"
+        url = url[:-1]
+
+        return url
+
+    def _update_url(self, url, option, value):
+        pos = url.find(option)
+        s_val = pos + len(option) + 1
+        e_val = url.find("&", pos)
+
+        new_url = url[:s_val] + value
+        if e_val > 0:
+            new_url += url[e_val:]
+
+        return new_url

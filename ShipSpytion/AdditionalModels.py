@@ -79,3 +79,45 @@ class Shipment(BaseModel):
         self.trackingNumber = trackingNumber
         self.labelData = labelData
         self.formData = formData
+
+
+class ListOrdersOptions(BaseModel):
+    def __init__(
+            self,
+            customerName="",
+            itemKeyword="",
+            createDateStart="",
+            createDateEnd="",
+            customerCountryCode="",
+            modifyDateStart="",
+            modifyDateEnd="",
+            orderDateStart="",
+            orderDateEnd="",
+            orderNumber="",
+            orderStatus="",
+            paymentDateStart="",
+            paymentDateEnd="",
+            storeId=0,
+            sortBy="",
+            sortDir="",
+            page="",
+            pageSize=""
+            ):
+        self.customerName = customerName
+        self.itemKeyword = itemKeyword
+        self.createDateStart = createDateStart
+        self.createDateEnd = createDateEnd
+        self.customerCountryCode = customerCountryCode
+        self.modifyDateStart = modifyDateStart
+        self.modifyDateEnd = modifyDateEnd
+        self.orderDateStart = orderDateStart
+        self.orderDateEnd = orderDateEnd
+        self.orderNumber = orderNumber
+        self.orderStatus = orderStatus
+        self.paymentDateStart = paymentDateStart
+        self.paymentDateEnd = paymentDateEnd
+        self.storeId = storeId
+        self.sortBy = sortBy
+        self.sortDir = sortDir
+        self.page = page if page else "1"
+        self.pageSize = pageSize if 0 < pageSize < 501 else 1

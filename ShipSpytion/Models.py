@@ -59,8 +59,8 @@ class Order(BaseModel):
             customerId=0,
             customerUsername="",
             customerEmail="",
-            billTo=Address(),
-            shipTo=Address(),
+            billTo=None,
+            shipTo=None,
             items=None,  # List of OrderItem
             orderTotal=0,
             amountPaid=0,
@@ -78,11 +78,11 @@ class Order(BaseModel):
             confirmation="",
             shipDate="",
             holdUntilDate="",
-            weight=Weight(),
-            dimensions=Dimensions(),
-            insuranceOptions=InsuranceOptions(),
-            internationalOptions=InternationalOptions(),
-            advancedOptions=AdvancedOptions(),
+            weight=None,
+            dimensions=None,
+            insuranceOptions=None,
+            internationalOptions=None,
+            advancedOptions=None,
             tagIds=None,
             userId="",
             externallyFulfilled=False,
@@ -100,8 +100,8 @@ class Order(BaseModel):
         self.customerId = customerId
         self.customerUsername = customerUsername
         self.customerEmail = customerEmail
-        self.billTo = billTo
-        self.shipTo = shipTo
+        self.billTo = Address() if billTo is None else billTo
+        self.shipTo = Address() if shipTo is None else shipTo
         self.items = [OrderItem()] if items is None else items
         self.orderTotal = orderTotal
         self.amountPaid = amountPaid
@@ -119,12 +119,12 @@ class Order(BaseModel):
         self.confirmation = confirmation
         self.shipDate = shipDate
         self.holdUntilDate = holdUntilDate
-        self.weight = weight
-        self.dimensions = dimensions
-        self.insuranceOptions = insuranceOptions
-        self.internationalOptions = internationalOptions
-        self.advancedOptions = advancedOptions
-        self.tagIds = tagIds
+        self.weight = Weight() if weight is None else weight
+        self.dimensions = Dimensions() if dimensions is None else dimensions
+        self.insuranceOptions = InsuranceOptions() if insuranceOptions is None else insuranceOptions
+        self.internationalOptions = InternationalOptions() if internationalOptions is None else internationalOptions
+        self.advancedOptions = AdvancedOptions() if advancedOptions is None else AdvancedOptions
+        self.tagIds = [0] if tagIds is None else tagIds
         self.userId = userId
         self.externallyFulfilled = externallyFulfilled
         self.externallyFulfilledBy = externallyFulfilledBy
@@ -147,8 +147,8 @@ class Product(BaseModel):
             createDate="",
             modifyDate="",
             active=False,
-            productCategory=ProductCategory(),
-            productType=ProductType(),
+            productCategory=None,
+            productType=None,
             warehouseLocation="",
             defaultCarrierCode="",
             defaultServiceCode="",
@@ -163,7 +163,7 @@ class Product(BaseModel):
             customsTariffNo="",
             customsCountryCode="",
             noCustoms=False,
-            tags=ProductTag()
+            tags=None
             ):
         self.productId = productId
         self.sku = sku
@@ -179,8 +179,8 @@ class Product(BaseModel):
         self.createDate = createDate
         self.modifyDate = modifyDate
         self.active = active
-        self.productCategory = productCategory
-        self.productType = productType
+        self.productCategory = ProductCategory() if productCategory is None else productCategory
+        self.productType = ProductType() if productType is None else productType
         self.warehouseLocation = warehouseLocation
         self.defaultCarrierCode = defaultCarrierCode
         self.defaultServiceCode = defaultServiceCode
@@ -195,7 +195,7 @@ class Product(BaseModel):
         self.customsTariffNo = customsTariffNo
         self.customsCountryCode = customsDescription
         self.noCustoms = noCustoms
-        self.tags = tags
+        self.tags = [ProductTag()] if tags is None else tags
 
 
 # FIX: Class Webhook Omitted

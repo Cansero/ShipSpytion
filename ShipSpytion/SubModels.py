@@ -157,7 +157,7 @@ class OrderItem(BaseModel):
             sku="",
             name="",
             imageUrl="",
-            weight=Weight(),
+            weight=None,
             quantity=0,
             unitPrice=0,
             taxAmount=0,
@@ -176,7 +176,7 @@ class OrderItem(BaseModel):
         self.sku = sku
         self.name = name
         self.imageUrl = imageUrl
-        self.weight = weight
+        self.weight = Weight() if weight is None else weight
         self.quantity = quantity
         self.unitPrice = unitPrice
         self.taxAmount = taxAmount

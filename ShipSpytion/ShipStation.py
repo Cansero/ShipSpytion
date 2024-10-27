@@ -249,6 +249,7 @@ class ShipStation:
             self._add_order(order, orders)
 
         if all:
+            url += "&page=1"
             pages = int(content["pages"])
             next_page = int(content["page"]) + 1
             next_page = next_page if next_page <= pages else None
@@ -310,9 +311,10 @@ class ShipStation:
 
         return url
 
-    def _update_url(self, url, option, value):
+    def _update_url(self, url, option, value):  # BUG: No error handling in case of not finding option
+        option += "="
         pos = url.find(option)
-        s_val = pos + len(option) + 1
+        s_val = pos + len(option)
         e_val = url.find("&", pos)
 
         new_url = url[:s_val] + value

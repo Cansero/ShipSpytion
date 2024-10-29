@@ -1,4 +1,5 @@
 from .BaseModel import BaseModel
+from .SubModels import Address, Weight, Dimensions, AdvancedOptions, OrderItem, InsuranceOptions
 
 
 class Carrier(BaseModel):
@@ -67,16 +68,62 @@ class Shipment(BaseModel):
     def __init__(
             self,
             shipmentId=0,
+            orderId=0,
+            orderKey="",
+            userId="",
+            orderNumber="",
+            createDate="",
+            shipDate="",
             shipmentCost=0,
             insuranceCost=0,
             trackingNumber="",
+            isReturnLabel=False,
+            batchNumber="",
+            carrierCode="",
+            serviceCode="",
+            packageCode="",
+            confirmation="",
+            warehouseId=0,
+            voided=False,
+            voidDate="",
+            marketplaceNotified=False,
+            notifyErrorMessage="",
+            shipTo=None,
+            weight=None,
+            dimensions=None,
+            insuranceOptions=None,
+            advancedOptions=None,
+            shipmentItems=None,
             labelData="",
             formData=None
             ):
         self.shipmentId = shipmentId
+        self.orderId = orderId
+        self.orderKey = orderKey
+        self.userId = userId
+        self.orderNumber = orderNumber
+        self.createDate = createDate
+        self.shipDate = shipDate
         self.shipmentCost = shipmentCost
         self.insuranceCost = insuranceCost
         self.trackingNumber = trackingNumber
+        self.isReturnLabel = isReturnLabel
+        self.batchNumber = batchNumber
+        self.carrierCode = carrierCode
+        self.serviceCode = serviceCode
+        self.packageCode = packageCode
+        self.confirmation = confirmation
+        self.warehouseId = warehouseId
+        self.voided = voided
+        self.voidDate = voidDate
+        self.marketplaceNotified = marketplaceNotified
+        self.notifuErrorMessage = notifyErrorMessage
+        self.shipTo = Address() if shipTo is None else shipTo
+        self.weight = Weight() if weight is None else weight
+        self.dimensions = Dimensions() if dimensions is None else dimensions
+        self.insuranceOptions = InsuranceOptions() if insuranceOptions is None else insuranceOptions
+        self.advancedOptions = AdvancedOptions() if advancedOptions is None else advancedOptions
+        self.shipmentItems = [OrderItem()] if shipmentItems is None else shipmentItems
         self.labelData = labelData
         self.formData = formData
 
@@ -121,3 +168,49 @@ class ListOrdersOptions(BaseModel):
         self.sortDir = sortDir
         self.page = page if page else "1"
         self.pageSize = pageSize if 0 < pageSize < 501 else 1
+
+
+class ListShipmentsOptions(BaseModel):
+    def __init__(
+            self,
+            recipientName="",
+            recipientCountryCode="",
+            orderNumber="",
+            orderId="",
+            carrierCode="",
+            serviceCode="",
+            trackingNumber="",
+            customsCountryCode="",
+            createDateStart="",
+            createDateEnd="",
+            shipDateStart="",
+            shipDateEnd="",
+            voidDateStart="",
+            voidDateEnd="",
+            storeId=0,
+            includeShipmentItems=False,
+            sortBy="",
+            sortDir="",
+            page=0,
+            pageSize=0
+            ):
+        self.recipientName = recipientName
+        self.recipientCountrCode = recipientCountryCode
+        self.orderNumber = orderNumber
+        self.orderId = orderId
+        self.carrierCode = carrierCode
+        self.serviceCode = serviceCode
+        self.trackingNumber = trackingNumber
+        self.customsCountryCode = customsCountryCode
+        self.createDateStart = createDateStart
+        self.createDateEnd = createDateEnd
+        self.shipDateStart = shipDateStart
+        self.shipDateEnd = shipDateEnd
+        self.voidDateStart = voidDateStart
+        self.voidDateEnd = voidDateEnd
+        self.storeId = storeId
+        self.includeShipmentItems = includeShipmentItems
+        self.sortBy = sortBy
+        self.sortDir = sortDir
+        self.page = page
+        self.pageSize = pageSize

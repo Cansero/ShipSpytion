@@ -34,7 +34,7 @@
 ### Shipments
 - [ ] Create Label
 - [ ] Get Rates
-- [ ] List Shipments
+- [x] List Shipments
 - [ ] Void A Label
 ### Stores
 - [ ] Deactivate a Store

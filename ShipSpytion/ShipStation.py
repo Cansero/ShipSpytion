@@ -6,7 +6,7 @@ from datetime import datetime
 from .Exceptions import NotImplementedError
 
 from .Models import Limits, Tag, Order
-from .AdditionalModels import Carrier, Package, Service, Shipment, ListOrdersOptions
+from .AdditionalModels import Carrier, Package, Service, Shipment, ListOrdersOptions, ListShipmentsOptions
 
 
 ORDER_STATUS = [
@@ -296,6 +296,47 @@ class ShipStation:
         response = self._request_handler("post", url, data=data)
 
         return response["success"]
+
+    def list_shipments(
+            self,
+            options: ListShipmentsOptions | dict = None,
+            all=False
+            ):
+        if isinstance(options, ListShipmentsOptions):
+            options = options.as_dict()
+
+        if options is None:
+            url = "/shipments?pageSize=500"
+        else:
+            url = "/shipments"
+            url += self._make_url(options)
+
+        content = self._request_handler("get", url)
+
+        shipments = []
+        for shipment in content["shipments"]:
+            s = Shipment()
+            s.update(shipment)
+            shipments.append(s)
+
+        if all:
+            url += "&page=1"
+            pages = int(content["pages"])
+            next_page = int(content["page"] + 1)
+            next_page = next_page if next_page <= pages else None
+
+            if pages > 1 and next_page is not None:
+                for i in range(next_page, pages + 1):
+                    n_url = url
+                    n_url = self._update_url(n_url, "page", str(i))
+                    content = self._request_handler("get", n_url)
+
+                    for shipment in content["shipments"]:
+                        s = Shipment()
+                        s.update(shipment)
+                        shipments.append(s)
+
+        return shipments
 
     def _add_order(self, order: dict, list_orders: list):
         o = Order()

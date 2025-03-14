@@ -41,7 +41,7 @@
 - [ ] Get Store Refresh Rate
 - [ ] Get Store Info
 - [ ] List Marketplaces
-- [ ] List Stores
+- [x] List Stores
 - [ ] Reactivate a Store
 - [ ] Refresh a Store
 - [ ] Update a Store

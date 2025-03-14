@@ -5,8 +5,21 @@ from datetime import datetime
 
 from .Exceptions import NotImplementedError
 
-from .Models import Limits, Tag, Order
-from .AdditionalModels import Carrier, Package, Service, Shipment, ListOrdersOptions, ListShipmentsOptions
+from .Models import (
+        Limits,
+        Tag,
+        Order,
+        )
+from .AdditionalModels import (
+        Carrier,
+        Package,
+        Service,
+        Shipment,
+        Store,
+        ListOrdersOptions,
+        ListShipmentsOptions,
+        ListStoresOptions,
+        )
 
 
 ORDER_STATUS = [
@@ -378,3 +391,25 @@ class ShipStation:
 
         return shipments
 
+    # STORES ------------------------------------------------------------------
+
+    def list_stores(
+            self,
+            options: ListStoresOptions | dict = None,
+            ):
+        if isinstance(options, ListStoresOptions):
+            options = options.as_dict()
+
+        url = "/stores"
+        if options is not None:
+            url += self._make_url(options)
+
+        content = self._request_handler("get", url)
+
+        stores = []
+        for store in content:
+            s = Store()
+            s.update(store)
+            stores.append(s)
+
+        return stores

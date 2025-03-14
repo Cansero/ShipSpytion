@@ -128,6 +128,46 @@ class Shipment(BaseModel):
         self.formData = formData
 
 
+class Store(BaseModel):
+    def __init__(
+            self,
+            storeId=0,
+            storeName="",
+            marketplaceId=0,
+            marketplaceName="",
+            accountName="",
+            email="",
+            integrationUrl="",
+            active=False,
+            companyName="",
+            phone="",
+            publicEmail="",
+            website="",
+            refreshDate="",
+            lastRefreshAttempt="",
+            createDate="",
+            modifyDate="",
+            autoRefresh=False,
+            ):
+        self.storeId = storeId
+        self.storeName = storeName
+        self.marketplaceId = marketplaceId
+        self.marketplaceName = marketplaceName
+        self.accountName = accountName
+        self.email = email
+        self.integrationUrl = integrationUrl
+        self.active = active
+        self.companyName = companyName
+        self.phone = phone
+        self.publicEmail = publicEmail
+        self.website = website
+        self.refreshDate = refreshDate
+        self.lastRefreshAttempt = lastRefreshAttempt
+        self.createDate = createDate
+        self.modifyDate = modifyDate
+        self.autoRefresh = autoRefresh
+
+
 class ListOrdersOptions(BaseModel):
     def __init__(
             self,
@@ -214,3 +254,13 @@ class ListShipmentsOptions(BaseModel):
         self.sortDir = sortDir
         self.page = page
         self.pageSize = pageSize
+
+
+class ListStoresOptions(BaseModel):
+    def __init__(
+            self,
+            showInactive=False,
+            marketplaceId=0,
+            ):
+        self.showInactive = showInactive
+        self.marketplaceId = marketplaceId

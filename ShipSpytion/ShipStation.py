@@ -19,6 +19,7 @@ from .AdditionalModels import (
         ListOrdersOptions,
         ListShipmentsOptions,
         ListStoresOptions,
+        MarkShippedOptions,
         )
 
 
@@ -108,7 +109,7 @@ class ShipStation:
         url = ""
         for k, v in options.items():
             if v:
-                url += k + "=" + k + "&"
+                url += k + "=" + str(v) + "&"
         url = url[:-1]
 
         return url
@@ -348,6 +349,25 @@ class ShipStation:
 
         return response["success"]
 
+    def mark_shipped(
+            self,
+            order: Order,
+            options: MarkShippedOptions | dict = None,
+            ):
+        if isinstance(options, MarkShippedOptions):
+            options = options.as_dict()
+
+        if "carrierCode" not in options or not order:
+            return
+
+        options["orderId"] = order.orderId
+        data = options
+
+        url = "/orders/markasshipped"
+        content = self._request_handler("post", url, data)
+
+        print(content)
+
     # SHIPMENTS ---------------------------------------------------------------
 
     def list_shipments(
@@ -396,7 +416,7 @@ class ShipStation:
     def list_stores(
             self,
             options: ListStoresOptions | dict = None,
-            ):
+            ) -> list[Store]:
         if isinstance(options, ListStoresOptions):
             options = options.as_dict()
 

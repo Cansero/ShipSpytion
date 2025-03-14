@@ -187,8 +187,8 @@ class ListOrdersOptions(BaseModel):
             storeId=0,
             sortBy="",
             sortDir="",
-            page="",
-            pageSize=""
+            page=0,
+            pageSize=500
             ):
         self.customerName = customerName
         self.itemKeyword = itemKeyword
@@ -206,8 +206,8 @@ class ListOrdersOptions(BaseModel):
         self.storeId = storeId
         self.sortBy = sortBy
         self.sortDir = sortDir
-        self.page = page if page else "1"
-        self.pageSize = pageSize if 0 < pageSize < 501 else 1
+        self.page = page if page else 1
+        self.pageSize = pageSize if 0 < pageSize < 501 else 500
 
 
 class ListShipmentsOptions(BaseModel):
@@ -264,3 +264,19 @@ class ListStoresOptions(BaseModel):
             ):
         self.showInactive = showInactive
         self.marketplaceId = marketplaceId
+
+
+class MarkShippedOptions(BaseModel):
+    def __init__(
+            self,
+            carrierCode="",
+            shipDate="",
+            trackingNumber="",
+            notifyCustomer=True,
+            notifySalesChannel=False,
+            ):
+        self.carrierCode = carrierCode
+        self.shipDate = shipDate
+        self.trackingNumber = trackingNumber
+        self.notifyCustomer = notifyCustomer
+        self.notifySalesChannel = notifySalesChannel

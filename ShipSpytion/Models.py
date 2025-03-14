@@ -34,11 +34,11 @@ class Limits:
 
 
 class Tag(BaseModel):
-    def __init(self,
-               tagId="",
-               name="",
-               color=""
-               ):
+    def __init__(self,
+                 tagId="",
+                 name="",
+                 color=""
+                 ):
         self.tagId = tagId
         self.name = name
         self.color = color

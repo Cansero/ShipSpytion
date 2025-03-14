@@ -37,6 +37,8 @@ class ShipStation:
         self.timeout = 10  # TODO: Confirm Usage
         self.limits = Limits()
 
+    # Internatl Functions -----------------------------------------------------
+
     def _request_handler(self,
                          request_type: str,
                          url: str,
@@ -83,6 +85,52 @@ class ShipStation:
             return json.loads(r.text)
         else:
             return "No body"
+
+    def _add_order(self, order: dict, list_orders: list):
+        o = Order()
+        o.update(order)
+        list_orders.append(o)
+
+    def _make_url(self, options: dict) -> str:
+        url = ""
+        for k, v in options.items():
+            if v:
+                url += k + "=" + k + "&"
+        url = url[:-1]
+
+        return url
+
+    def _update_url(self, url, option, value):  # BUG: No error handling in case of not finding option
+        option += "="
+        pos = url.find(option)
+        s_val = pos + len(option)
+        e_val = url.find("&", pos)
+
+        new_url = url[:s_val] + value
+        if e_val > 0:
+            new_url += url[e_val:]
+
+        return new_url
+
+    # ACCOUNTS ----------------------------------------------------------------
+
+    def list_account_tags(self) -> list[Tag]:
+        url = "/accounts/listtags"
+        tags = self._request_handler("get", url)
+
+        r_tags = []
+        if tags:
+            for tag in tags:
+                if self.debug:
+                    print(tag)
+
+                t = Tag()
+                t.update(tag)
+                r_tags.append(t)
+
+        return r_tags
+
+    # CARRIERS ----------------------------------------------------------------
 
     # NOTE: Not tried
     def add_funds_to_carrier(self, carrier: Carrier, amount: int):
@@ -150,6 +198,8 @@ class ShipStation:
 
         return r_services
 
+    # CUSTOMERS ---------------------------------------------------------------
+
     # FIX: Poorly implemented
     def get_customer_info(self, customerId):
         url = f"/customers/{customerId}"
@@ -161,24 +211,12 @@ class ShipStation:
     def list_customers(self):
         raise NotImplementedError("list_customers not implemented yet")
 
+    # FULFILLMENTS ------------------------------------------------------------
+
     def list_fulfillments(self):
         raise NotImplementedError("list_fulfillments not implemented yet")
 
-    def list_account_tags(self) -> list[Tag]:
-        url = "/accounts/listtags"
-        tags = self._request_handler("get", url)
-
-        r_tags = []
-        if tags:
-            for tag in tags:
-                if self.debug:
-                    print(tag)
-
-                t = Tag()
-                t.update(tag)
-                r_tags.append(t)
-
-        return r_tags
+    # ORDERS ------------------------------------------------------------------
 
     def assign_user(self, orders, user):
         # WARNING: Add User Class for this function
@@ -297,6 +335,8 @@ class ShipStation:
 
         return response["success"]
 
+    # SHIPMENTS ---------------------------------------------------------------
+
     def list_shipments(
             self,
             options: ListShipmentsOptions | dict = None,
@@ -338,28 +378,3 @@ class ShipStation:
 
         return shipments
 
-    def _add_order(self, order: dict, list_orders: list):
-        o = Order()
-        o.update(order)
-        list_orders.append(o)
-
-    def _make_url(self, options: dict) -> str:
-        url = ""
-        for k, v in options.items():
-            if v:
-                url += k + "=" + k + "&"
-        url = url[:-1]
-
-        return url
-
-    def _update_url(self, url, option, value):  # BUG: No error handling in case of not finding option
-        option += "="
-        pos = url.find(option)
-        s_val = pos + len(option)
-        e_val = url.find("&", pos)
-
-        new_url = url[:s_val] + value
-        if e_val > 0:
-            new_url += url[e_val:]
-
-        return new_url
